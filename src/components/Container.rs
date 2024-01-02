@@ -51,7 +51,12 @@ pub fn Container() -> impl IntoView {
     });
 
     view! {
-        <div>
+        <div class="max-w-md p-6 bg-white rounded-md shadow-md" style="
+            max-height: 100vh;
+            overflow-y: hidden;
+            display: flex;
+            flex-direction: column;
+        ">
             <Input
                 on_change=move |ev| {
                     let value = event_target_value(&ev);
@@ -61,31 +66,32 @@ pub fn Container() -> impl IntoView {
                 value=value.get()
             />
             <Items items=data/>
-            {move || {
-                if page.get() > 1 {
-                    view! {
-                        <div>
-                            <Button
-                                on_click=move |_| {
-                                    set_page(page.get() - 1);
-                                }
+            <div class="flex justify-between" style="flex: 1;">
+                {move || {
+                    if page.get() > 1 {
+                        view! {
+                            <div>
+                                <Button
+                                    on_click=move |_| {
+                                        set_page(page.get() - 1);
+                                    }
 
-                                label="Prev"
-                            />
-                        </div>
+                                    label="Prev"
+                                />
+                            </div>
+                        }
+                    } else {
+                        view! { <div></div> }
                     }
-                } else {
-                    view! { <div></div> }
-                }
-            }}
+                }}
+                <Button
+                    on_click=move |_| {
+                        set_page(page.get() + 1);
+                    }
 
-            <Button
-                on_click=move |_| {
-                    set_page(page.get() + 1);
-                }
-
-                label="Next"
-            />
+                    label="Next"
+                />
+            </div>
         </div>
     }
 }

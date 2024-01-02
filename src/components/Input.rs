@@ -8,12 +8,15 @@ pub fn Input(
     on_change: Callback<Event>,
 ) -> impl IntoView {
     view! {
-        <input
-            type="text"
-            on:input=on_change
-            // the `prop:` syntax lets you update a DOM property,
-            // rather than an attribute.
-            prop:value=value
-        />
+        <div class="mb-4" style="flex: 1;">
+            <input
+                type="text"
+                on:input=on_change
+                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+                // the `prop:` syntax lets you update a DOM property,
+                // rather than an attribute.
+                prop:value=value
+            />
+        </div>
     }
 }
