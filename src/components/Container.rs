@@ -11,6 +11,10 @@ const GITHUB_PER_PAGE: usize = 10;
 async fn fetch_profiles(params: (String, usize)) -> Result<Vec<GithubProfile>> {
     let (value, page) = params;
 
+    if value == "" {
+       return Ok(Vec::<GithubProfile>::new())
+    }
+
     // make the request
     let res = reqwasm::http::Request::get(&format!(
         "https://api.github.com/search/users?q={value}&page={page}&per_page={GITHUB_PER_PAGE}",
@@ -28,7 +32,7 @@ async fn fetch_profiles(params: (String, usize)) -> Result<Vec<GithubProfile>> {
 pub fn Container() -> impl IntoView {
     let (page, set_page) = create_signal(1);
     let (value, set_value) = create_signal("".to_string());
-    let throttled: Signal<String> = signal_throttled_with_options(value, 3000.0, ThrottleOptions::default().leading(true).trailing(true));
+    let throttled: Signal<String> = signal_debounced(value, 1000.0);
     let (data, set_data) = create_signal::<Vec<GithubProfile>>(Vec::<GithubProfile>::new());
 
     let _stop = watch(
